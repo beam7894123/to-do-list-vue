@@ -2,7 +2,9 @@
 A small To-do list project in Vue.js
 
 ## Features
+- Modern UI with Ant Design Vue
 - Save all change and tasks in cookies
+- Sort you list by finished or not
 - uhhhhhhhh
 
 ## Project setup
