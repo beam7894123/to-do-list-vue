@@ -1,0 +1,17 @@
+{
+  "name": "todo-list-api",
+  "version": "1.0.0",
+  "description": "todo-list API for keep users todo list",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
