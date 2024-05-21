@@ -1,0 +1,12 @@
+node_modules
+uploads
+downloads
+.vscode
+# Cert
+*.crt
+*.key
+*.pem
+.idea
+.env.production
+.env
+.env.staging
