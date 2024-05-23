@@ -1,5 +1,5 @@
 # To-do-list Project
-A small To-do list project in Vue.js
+A small To-do list project in Vue.js(+vite)
 - [Play here!](https://beam7894123.github.io/to-do-list-vue/)
 
 ## Features
@@ -15,7 +15,7 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run dev
 ```
 
 ### Compiles and minifies for production
@@ -23,18 +23,9 @@ npm run serve
 npm run build
 ```
 
-### Run your unit tests
-```
-npm run test:unit
-```
+[//]: # (### Customize configuration)
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[//]: # (See [Configuration Reference]&#40;https://cli.vuejs.org/config/&#41;.)
 
 ### Special Thanks :3
 - [Ant Design of Vue](https://github.com/vueComponent/ant-design-vue/)
