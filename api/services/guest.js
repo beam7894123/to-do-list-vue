@@ -120,12 +120,39 @@ const delToDo = async (conn, body) => {
   )
 }
 
+const updateStatus = async (conn, body) => {
+  let where = ``
+  where += !empty(body.passcode)
+      ? SqlString.format(`${body.passcode}`)
+      : ``
 
+  const resultId = await conn.query(
+      ` SELECT id FROM guest WHERE passcode="${where}" `
+  )
+  if (resultId.length === 0) {
+    throw new Error('User not found')
+  }
+  const resultIdToDoCheck = ' SELECT id FROM guest_todo_list WHERE OWNER=? && id=? ';
+  const [resultIdToDoCheckDone] = await pool.query(resultIdToDoCheck, [resultId[0].id, body.toDoId]);
+  // console.log(resultId[0].id);
+  // console.log(body.toDoId);
+  // console.log(resultIdToDoCheckDone.id.toString());
+  if (resultIdToDoCheckDone === undefined){
+    throw new Error('Unauthorized! (Not found)')
+  }
+
+  const result = await conn.query(
+      ` UPDATE guest_todo_list SET status="${body.status}" WHERE  owner="${resultId[0].id}" AND id="${body.toDoId}"  `
+  )
+  // console.log(result);
+  return {message: 'Update todo check successfully!'}
+}
 
 module.exports = {
   getList,
   register,
   addToDo,
   delToDo,
+  updateStatus,
 };
 

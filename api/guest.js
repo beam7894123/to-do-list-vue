@@ -99,3 +99,17 @@ router.post('/list/delete', async (req, res, next) => {
   }
 })
 
+router.post('/list/update/status', async (req, res, next) => {
+  let conn
+  try {
+    conn = await pool.getConnection()
+    const data = await selfService.updateStatus(conn, req.body)
+    res.json(data)
+  } catch (err) {
+    res.status(500).send({
+      message: err.message
+    })
+  } finally {
+    if (conn) conn.release()
+  }
+})
