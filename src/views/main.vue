@@ -28,7 +28,6 @@
                 :columns="columns"
                 :scroll="{ x: 576, y: 900}"
                 :pagination="{ pageSize: 5 }"
-                :loading="loading"
             >
               <template #bodyCell="{ column, index, record }">
                 <template v-if="column.key === 'checkbox'">
