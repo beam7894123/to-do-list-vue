@@ -46,7 +46,9 @@ const getList = async (conn, body) => {
     ` SELECT id FROM guest WHERE passcode="${where}" `
   )
   if (resultId.length === 0) {
-    throw new Error('Requested list data not found')
+    const error = new Error('Requested user not found!');
+    error.statusCode = 404;
+    throw error;
   }
 
   // result id is not empty continue to get the list
@@ -55,7 +57,9 @@ const getList = async (conn, body) => {
   )
   const promotionResult = result
   if (promotionResult.length === 0) {
-    throw new Error('Requested list data not found')
+    const error = new Error('Requested list data not found!');
+    error.statusCode = 404;
+    throw error;
   }
   return promotionResult
 }
@@ -70,13 +74,21 @@ let where = ``
     ` SELECT id FROM guest WHERE passcode="${where}" `
   )
   if (resultId.length === 0) {
-    throw new Error('User not found')
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
   }
 
-  const result = await conn.query(
+  await conn.query(
     ` INSERT INTO guest_todo_list (owner, title) VALUES ("${resultId[0].id}", "${body.title}") `
   )
-  return {message: 'Add todo successfully!'}
+
+  // ask for the id of the last inserted row
+  const result = await conn.query(
+      ` SELECT id,title,status FROM guest_todo_list WHERE OWNER="${resultId[0].id}" ORDER BY 1 DESC LIMIT 1; `
+  )
+  // console.log(result);
+  return result[0]
 }
 
 const delToDo = async (conn, body) => {

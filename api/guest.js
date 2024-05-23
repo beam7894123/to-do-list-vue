@@ -46,7 +46,9 @@ router.post('/get-list', async (req, res, next) => {
     const data = await selfService.getList(conn, req.body)
     res.json(data)
   } catch (err) {
-    res.status(500).send(err.message)
+    res.status(err.statusCode).send({
+      message: err.message
+    })
   } finally {
     if (conn) conn.release()
   }
@@ -76,7 +78,9 @@ router.post('/list/add', async (req, res, next) => {
     const data = await selfService.addToDo(conn, req.body)
     res.json(data)
   } catch (err) {
-    res.status(500).send(err.message)
+    res.status(err.statusCode).send({
+      message: err.message
+    })
   } finally {
     if (conn) conn.release()
   }
