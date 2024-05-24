@@ -1,44 +1,51 @@
 <template>
-  <div>
+  <div class="flex-container">
     <!-- Input Passcode ===================================================================== -->
-    <a-space align="center">
-      <a-input
-          id="passcodeInput"
-          v-model:value="passcodeText.passcode"
-          placeholder="Passcode..."
-          @pressEnter="loadTodoList"
-      />
-      <a-button @click="copyPasscode">
-        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 16.5L19.5 4.5L18.75 3.75H9L8.25 4.5L8.25 7.5L5.25 7.5L4.5 8.25V20.25L5.25 21H15L15.75 20.25V17.25H18.75L19.5 16.5ZM15.75 15.75L15.75 8.25L15 7.5L9.75 7.5V5.25L18 5.25V15.75H15.75ZM6 9L14.25 9L14.25 19.5L6 19.5L6 9Z" fill="#080341"/>
-        </svg>
-      </a-button>
-      <a-button
-          type="primary"
-          :loading="LoadingPasscode"
-          @click="loadTodoList"
-      >
-        Load Passcode
-      </a-button>
-      <a-popconfirm
-          placement="rightTop"
-          ok-text="Yes"
-          cancel-text="No"
-          @confirm="createPasscode">
-        <template v-slot:title>
-          <p> This will overwrite current passcode!</p>
-          <p> Are you sure? </p>
-        </template>
-        <a-button>Create new Passcode</a-button>
-      </a-popconfirm>
-    </a-space>
+    <div class="flex-item">
+      <p>Guest mode</p>
+      <a-space align="center">
+        <a-input
+            class = "inputPasscode"
+            id="passcodeInput"
+            v-model:value="passcodeText.passcode"
+            placeholder="Passcode..."
+            @pressEnter="loadTodoList"
+        />
+        <a-button @click="copyPasscode">
+          <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 16.5L19.5 4.5L18.75 3.75H9L8.25 4.5L8.25 7.5L5.25 7.5L4.5 8.25V20.25L5.25 21H15L15.75 20.25V17.25H18.75L19.5 16.5ZM15.75 15.75L15.75 8.25L15 7.5L9.75 7.5V5.25L18 5.25V15.75H15.75ZM6 9L14.25 9L14.25 19.5L6 19.5L6 9Z" fill="#080341"/>
+          </svg>
+        </a-button>
+        <a-button
+            type="primary"
+            :loading="LoadingPasscode"
+            @click="loadTodoList"
+        >
+          Load Passcode
+        </a-button>
+        <a-popconfirm
+            placement="rightTop"
+            ok-text="Yes"
+            cancel-text="No"
+            @confirm="createPasscode">
+          <template v-slot:title>
+            <p> This will overwrite current passcode!</p>
+            <p> Are you sure? </p>
+          </template>
+          <a-button>Create new Passcode</a-button>
+        </a-popconfirm>
+        <a-button @click="$router.push(`/old`)">
+          Local Mode >
+        </a-button>
+      </a-space>
+    </div>
 
-    <!-- Create task form ===================================================================== -->
-    <div class="creatNewTask">
+    <!-- Create Todo form ===================================================================== -->
+    <div class="flex-item">
       <a-space align="center">
         <a-textarea
             :auto-size="{ minRows: 1, maxRows: 4 }"
-            class="inputTask"
+            class="inputTodo"
             v-model:value="newTask"
             placeholder="What's on your mind?..."
             @pressEnter="createNewTask"
@@ -50,7 +57,7 @@
     </div>
 
     <!-- List Tasks table ===================================================================== -->
-    <div class="taskTable">
+    <div class="flex-item taskTable">
       <a-space align="center">
         <a-table
             :dataSource="tasks"
@@ -67,21 +74,23 @@
               ></a-checkbox>
             </template>
             <template v-if="column.key === 'index'">
-                  <span :class="{ 'line-through': record.status }">
                     {{ index + 1 }}
-                  </span>
             </template>
 
             <!--              Button to delete a task ============================================-->
             <template v-if="column.key === 'delete' && record.status === false">
               <a-button block @click="() => deleteTodo(record.id)"
-                        style="background-color: #000; color: white; border: none;">
+                        style="background-color: #000; color: white; border: none;"
+                        :loading="LoadingDeleteTask"
+              >
                 Delete?
               </a-button>
             </template>
             <template v-if="column.key === 'delete' && record.status === true">
               <a-button block @click="() => deleteTodo(record.id)"
-                        style="background-color: #ff5052; color: white; border: none;">
+                        style="background-color: #ff5052; color: white; border: none;"
+                        :loading="LoadingDeleteTask"
+              >
                 Delete
               </a-button>
             </template>
@@ -106,6 +115,7 @@ export default {
       LoadingPasscode: false,
       LoadingCheckbox: false,
       LoadingCreateNewTask: false,
+      LoadingDeleteTask: false,
 
       newTask: '',
       tasks: [],
@@ -124,7 +134,7 @@ export default {
           title: '',
           key: 'delete',
           width: '20%',
-          sorter: (a, b) => a.done - b.done,
+          sorter: (a, b) => a.status - b.status,
         },
       ],
       }
@@ -144,6 +154,9 @@ export default {
       catch (error) {
         // console.log('Error:', error);
         message.error('Generate Passcode failed!');
+      }
+      finally {
+        this.tasks = []; // Clear the task list
       }
     },
 
@@ -166,7 +179,7 @@ export default {
             ...task,
             status: task.status === 1,
           }));
-          console.log('Tasks:', this.tasks);
+          // console.log('Tasks:', this.tasks);
           message.success('List load!');
         }
       }
@@ -197,11 +210,15 @@ export default {
           passcode: this.passcodeText.passcode,
           title: this.newTask,
         };
-        // console.log('New task:', newTask);
-        // console.log('before:', this.tasks);
-        const response = apiClient.post('/guest/list/add/', newTask);
-        // console.log('Response:', response);
-        this.tasks = [(await response).data, ...this.tasks];
+        // Save the task to the server first before adding it to the list
+        const response = await apiClient.post('/guest/list/add/', newTask)
+
+        // Convert the status if necessary and update the tasks list
+        const addedTask = {
+          ...response.data,
+          status: response.data.status === 1
+        };
+        this.tasks = [addedTask, ...this.tasks];
         this.newTask = ''; // Clear the input field after adding the task
         message.success('Task added successfully!');
         // console.log('after:', this.tasks);
@@ -246,13 +263,15 @@ export default {
 
     async deleteTodo(id) {
       try {
-        // const response = await apiClient.post('/guest/list/delete/', {
-        //   passcode: this.passcodeText.passcode,
-        //   toDoId: id,
-        // });
-        // // console.log('Response:', response);
-        // this.tasks = this.tasks.filter((task) => task.id !== id);
-        // message.success('Task deleted successfully!');
+        this.LoadingDeleteTask = true;
+        // console.log('Deleting task:', id);
+        await apiClient.post('/guest/list/delete/', {
+          passcode: this.passcodeText.passcode,
+          toDoId: id,
+        });
+        // console.log('Response:', response);
+        this.tasks = this.tasks.filter((task) => task.id !== id);
+        message.success('Task deleted successfully!');
       } catch (error) {
         let errorMessage;
         if (error.response) {
@@ -262,6 +281,9 @@ export default {
         }
         message.error(errorMessage);
       }
+      finally {
+        this.LoadingDeleteTask = false;
+      }
     },
 
   }
@@ -269,22 +291,40 @@ export default {
 
 </script>
 
-<style scoped>
-.creatNewTask, .taskTable {
-  max-width: 1200px;
-  margin-bottom: 20px;
+<style>
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  margin: 2rem 20rem 20rem;
+  width: 75rem;
 }
 
-.inputTask {
-  min-width: 400px;
-  width: auto;
+.flex-item {
+  flex: 1; /* Equal width for all items */
+  padding: 1rem;
 }
-.taskTable{
+
+.taskTable {
+  width: 100%;
+}
+
+.inputPasscode {
+  width: 40rem;
+}
+.inputTodo{
+  width: 64rem;
+}
+.taskTable tableNotDone {
+  background-color: aliceblue;
   height: auto;
 }
-.taskTable table {
-  background-color: aliceblue;
+
+.taskTable tableDone {
+  background-color: darkseagreen;
 }
+
 .taskTable p {
   text-align: left;
 }

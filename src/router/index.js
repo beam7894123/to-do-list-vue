@@ -18,12 +18,12 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     },
     {
-      path: '/',
+      path: '/old',
       name: 'main',
-      component: () => import('../views/main.vue')
+      component: () => import('../views/mainCookie.vue')
     },
     {
-      path: '/guest',
+      path: '/',
       name: 'guest',
       component: () => import('../views/guest/index.vue')
     }
