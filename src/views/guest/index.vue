@@ -67,24 +67,24 @@
               ></a-checkbox>
             </template>
             <template v-if="column.key === 'index'">
-                  <span :class="{ 'line-through': record.done }">
+                  <span :class="{ 'line-through': record.status }">
                     {{ index + 1 }}
                   </span>
             </template>
 
             <!--              Button to delete a task ============================================-->
-<!--            <template v-if="column.key === 'delete' && record.done === false">-->
-<!--              <a-button block @click="() => onDeleteTask(record.id)"-->
-<!--                        style="background-color: #000; color: white; border: none;">-->
-<!--                Delete?-->
-<!--              </a-button>-->
-<!--            </template>-->
-<!--            <template v-if="column.key === 'delete' && record.done === true">-->
-<!--              <a-button block @click="() => onDeleteTask(record.id)"-->
-<!--                        style="background-color: #ff5052; color: white; border: none;">-->
-<!--                Delete-->
-<!--              </a-button>-->
-<!--            </template>-->
+            <template v-if="column.key === 'delete' && record.status === false">
+              <a-button block @click="() => deleteTodo(record.id)"
+                        style="background-color: #000; color: white; border: none;">
+                Delete?
+              </a-button>
+            </template>
+            <template v-if="column.key === 'delete' && record.status === true">
+              <a-button block @click="() => deleteTodo(record.id)"
+                        style="background-color: #ff5052; color: white; border: none;">
+                Delete
+              </a-button>
+            </template>
             <!--              Button to delete a task END ============================================-->
           </template>
         </a-table>
@@ -162,7 +162,11 @@ export default {
         });
         // console.log('Passcode:', response);
         if (response) {
-          this.tasks = response.data;
+          this.tasks = response.data.map(task => ({
+            ...task,
+            status: task.status === 1,
+          }));
+          console.log('Tasks:', this.tasks);
           message.success('List load!');
         }
       }
@@ -240,7 +244,7 @@ export default {
       }
     },
 
-    async onDeleteTask(id) {
+    async deleteTodo(id) {
       try {
         // const response = await apiClient.post('/guest/list/delete/', {
         //   passcode: this.passcodeText.passcode,
@@ -266,5 +270,22 @@ export default {
 </script>
 
 <style scoped>
+.creatNewTask, .taskTable {
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
 
+.inputTask {
+  min-width: 400px;
+  width: auto;
+}
+.taskTable{
+  height: auto;
+}
+.taskTable table {
+  background-color: aliceblue;
+}
+.taskTable p {
+  text-align: left;
+}
 </style>
