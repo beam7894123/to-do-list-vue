@@ -19,25 +19,25 @@
 CREATE DATABASE IF NOT EXISTS `todo-list` /*!40100 DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci */;
 USE `todo-list`;
 
--- Dumping structure for table todo-list.list
-CREATE TABLE IF NOT EXISTS `list` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `owner` int(11) NOT NULL,
-    `title` varchar(500) NOT NULL DEFAULT '',
-    `status` tinyint(4) NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    KEY `owner` (`owner`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+-- Dumping structure for table todo-list.guest
+CREATE TABLE IF NOT EXISTS `guest` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `passcode` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`,`passcode`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table todo-list.user
-CREATE TABLE IF NOT EXISTS `user` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `passcode` varchar(100) NOT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+-- Dumping structure for table todo-list.guest_todo_list
+CREATE TABLE IF NOT EXISTS `guest_todo_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) NOT NULL,
+  `title` varchar(500) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `owner` (`owner`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- Data exporting was unselected.
 
