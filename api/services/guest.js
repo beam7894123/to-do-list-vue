@@ -6,10 +6,10 @@ const pool = require("../databasepuller");
 
 
 async function isUUIDUnique(uuid) {
-  const sqlQuery = 'SELECT COUNT(*) AS count FROM guest WHERE passcode= ?';
-  const [rows] = await pool.query(sqlQuery, [uuid]);
-  // console.log(rows.count.toString());
-  if (rows[0].count.toString() !== '0'){
+  const sqlQuery = 'SELECT COUNT(*) AS countPasscode FROM guest WHERE passcode= ?';
+  const rows = await pool.query(sqlQuery, [uuid]);
+  console.log(rows[0].countPasscode.toString());
+  if (rows[0].countPasscode.toString() !== '0'){
     await generateUniqueUUID()
   }
   return true
