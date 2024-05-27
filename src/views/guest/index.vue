@@ -62,6 +62,7 @@
         <a-table
             :dataSource="tasks"
             :columns="columns"
+            :rowClassName="setRowClassName"
             :scroll="{ x: 576, y: 900}"
             :pagination="{ pageSize: 5 }"
         >
@@ -88,7 +89,7 @@
             </template>
             <template v-if="column.key === 'delete' && record.status === true">
               <a-button block @click="() => deleteTodo(record.id)"
-                        style="background-color: #ff5052; color: white; border: none;"
+                        style="background-color: #ffa1a2; color: #000000; border: none;"
                         :loading="LoadingDeleteTask"
               >
                 Delete
@@ -286,6 +287,10 @@ export default {
       }
     },
 
+    setRowClassName(record) {
+      return record.status ? 'tableDone' : 'tableNotDone';
+    },
+
   }
 }
 
@@ -297,7 +302,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: stretch;
-  margin: 2rem 20rem 20rem;
+  margin: 2rem auto 20rem;
   width: 75rem;
 }
 
@@ -308,6 +313,7 @@ export default {
 
 .taskTable {
   width: 100%;
+  height: auto;
 }
 
 .inputPasscode {
@@ -316,13 +322,12 @@ export default {
 .inputTodo{
   width: 64rem;
 }
-.taskTable tableNotDone {
-  background-color: aliceblue;
-  height: auto;
+.tableNotDone {
+
 }
 
-.taskTable tableDone {
-  background-color: darkseagreen;
+.tableDone {
+  background-color: #e2ffe5;
 }
 
 .taskTable p {
