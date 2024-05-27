@@ -9,7 +9,7 @@ async function isUUIDUnique(uuid) {
   const sqlQuery = 'SELECT COUNT(*) AS count FROM guest WHERE passcode= ?';
   const [rows] = await pool.query(sqlQuery, [uuid]);
   // console.log(rows.count.toString());
-  if (rows.count.toString() !== '0'){
+  if (rows[0].count.toString() !== '0'){
     await generateUniqueUUID()
   }
   return true
@@ -70,25 +70,27 @@ let where = ``
     ? SqlString.format(`${body.passcode}`)
     : ``
 
-  const resultId = await conn.query(
+  const resultUserId = await conn.query(
     ` SELECT id FROM guest WHERE passcode="${where}" `
   )
-  if (resultId.length === 0) {
+  if (resultUserId.length === 0) {
     const error = new Error('User not found');
     error.statusCode = 404;
     throw error;
   }
 
-  await conn.query(
-    ` INSERT INTO guest_todo_list (owner, title) VALUES ("${resultId[0].id}", "${body.title}") `
+  const result = await conn.query(
+    ` INSERT INTO guest_todo_list (owner, title) VALUES ("${resultUserId[0].id}", "${body.title}") `
   )
 
-  // ask for the id of the last inserted row
-  const result = await conn.query(
-      ` SELECT id,title,status FROM guest_todo_list WHERE OWNER="${resultId[0].id}" ORDER BY 1 DESC LIMIT 1; `
-  )
-  // console.log(result);
-  return result[0]
+  const resultID = result.insertId.toString()
+
+  return {
+    id: resultID,
+    title: body.title,
+    status: 0
+
+  }
 }
 
 const delToDo = async (conn, body) => {
