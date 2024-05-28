@@ -1,62 +1,65 @@
 <template>
   <div class="flex-container">
-    <div>
+    <div class="flex-item">
+      <a-space align="baseline" :size="10" >
       <img alt="logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-    </div>
-    <div>
-      <a-space align="center" direction="vertical">
-        <!-- Create task form ===================================================================== -->
-        <div class="creatNewTask">
-          <a-space align="center">
-            <a-textarea
-                :auto-size="{ minRows: 1, maxRows: 4 }"
-                class="inputTask"
-                v-model:value="newTask"
-                placeholder="What's on your mind?..."
-                @pressEnter="onCreateNewTask"
-            />
-            <a-button type="primary" @click="onCreateNewTask">
-              Create new task
-            </a-button>
-          </a-space>
+        <div class="flex-container-small">
+          <h1>Todo List (Cookie mode) ‧₊˚ 🍪 ⋅ ☆ </h1>
+          <p>Please note that the tasks will be saved in your browser cookies and will be deleted if you clear or eat your cookies. (๑ᵔ⤙ᵔ๑) </p>
         </div>
-        <!-- List Tasks table ===================================================================== -->
-        <div class="taskTable">
-          <a-space align="center">
-            <a-table
-                :dataSource="tasks"
-                :columns="columns"
-                :scroll="{ x: 576, y: 900}"
-                :pagination="{ pageSize: 5 }"
-            >
-              <template #bodyCell="{ column, index, record }">
-                <template v-if="column.key === 'checkbox'">
-                  <a-checkbox v-model:checked="record.done" @change="onTaskChange"></a-checkbox>
-                </template>
-                <template v-if="column.key === 'index'">
+        </a-space>
+    </div>
+    <!-- Create task form ===================================================================== -->
+    <div class="flex-item">
+      <a-space align="center">
+        <a-textarea
+            :auto-size="{ minRows: 1, maxRows: 4 }"
+            class="inputTask"
+            v-model:value="newTask"
+            placeholder="What's on your mind?..."
+            @pressEnter="onCreateNewTask"
+        />
+        <a-button type="primary" @click="onCreateNewTask">
+          Create new task
+        </a-button>
+      </a-space>
+    </div>
+    <!-- List Tasks table ===================================================================== -->
+    <div class="flex-item taskTable">
+      <a-space align="center">
+        <a-table
+            :dataSource="tasks"
+            :columns="columns"
+            :scroll="{ x: 576, y: 900}"
+            :pagination="{ pageSize: 5 }"
+            :rowClassName="setRowClassName"
+        >
+          <template #bodyCell="{ column, index, record }">
+            <template v-if="column.key === 'checkbox'">
+              <a-checkbox v-model:checked="record.done" @change="onTaskChange"></a-checkbox>
+            </template>
+            <template v-if="column.key === 'index'">
                   <span :class="{ 'line-through': record.done }">
                     {{ index + 1 }}
                   </span>
-                </template>
+            </template>
 
-                <!--              Button to delete a task ============================================-->
-                <template v-if="column.key === 'delete' && record.done === false">
-                  <a-button block @click="() => onDeleteTask(record.id)"
-                            style="background-color: #000; color: white; border: none;">
-                    Delete?
-                  </a-button>
-                </template>
-                <template v-if="column.key === 'delete' && record.done === true">
-                  <a-button block @click="() => onDeleteTask(record.id)"
-                            style="background-color: #ff5052; color: white; border: none;">
-                    Delete
-                  </a-button>
-                  <!--              Button to delete a task END ============================================-->
-                </template>
-              </template>
-            </a-table>
-          </a-space>
-        </div>
+            <!--              Button to delete a task ============================================-->
+            <template v-if="column.key === 'delete' && record.done === false">
+              <a-button block @click="() => onDeleteTask(record.id)"
+                        style="background-color: #000; color: white; border: none;">
+                Delete?
+              </a-button>
+            </template>
+            <template v-if="column.key === 'delete' && record.done === true">
+              <a-button block @click="() => onDeleteTask(record.id)"
+                        style="background-color: #ff5052; color: white; border: none;">
+                Delete
+              </a-button>
+              <!--              Button to delete a task END ============================================-->
+            </template>
+          </template>
+        </a-table>
       </a-space>
     </div>
   </div>
@@ -172,6 +175,10 @@ export default {
       // console.log('Loaded tasks:', this.tasks); // Debug log
       // console.log('Loaded dataSource:', this.tasks.length); // Debug log
     },
+
+    setRowClassName(record) {
+      return record.done ? 'tableDone' : 'tableNotDone';
+    },
   },
   // Load tasks from cookies when the app is created
   created() {
@@ -185,16 +192,23 @@ export default {
 .flex-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  //padding: 20px;
-  margin-top: 10px;
-  //border: 3px solid green;
-
+  justify-content: center;
+  align-items: stretch;
+  margin: 2rem auto 20rem;
+  width: 75rem;
 }
+.flex-container-small {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.flex-item {
+  flex: 1; /* Equal width for all items */
+  padding: 1rem;
+}
+
 
 .creatNewTask, .taskTable {
   max-width: 1200px;
@@ -202,19 +216,20 @@ export default {
 }
 
 .inputTask {
-  min-width: 400px;
+  min-width: 64rem;
   width: auto;
 }
 .taskTable{
   height: auto;
-}
-.taskTable table {
-  background-color: aliceblue;
 }
 .taskTable p {
   text-align: left;
 }
 .line-through {
   text-decoration: line-through;
+}
+
+.tableDone {
+  background-color: #e2ffe5;
 }
 </style>

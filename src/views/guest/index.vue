@@ -1,8 +1,17 @@
 <template>
   <div class="flex-container">
+    <div class="flex-item">
+      <a-space align="baseline" :size="10" >
+        <img alt="logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+        <div class="flex-container-small">
+          <h1>Todo List (API mode) ‧₊˚ ｡🇯‌🇸‌ ⋅ ☆ </h1>
+          <p>Please keep your passcode safe. If you lose it, you will lose all access to your tasks!（• ˕ •マ.ᐟ </p>
+        </div>
+      </a-space>
+    </div>
+
     <!-- Input Passcode ===================================================================== -->
     <div class="flex-item">
-      <p>Guest mode</p>
       <a-space align="center">
         <a-input
             class = "inputPasscode"
