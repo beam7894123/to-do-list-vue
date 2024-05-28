@@ -2,7 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const router = express.Router();
 module.exports = router;
-const pool = require('../api/databasepuller.js');
+const pool = require('../db.js');
 
 
 router.get('/:id', async function(req,res){

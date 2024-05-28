@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 module.exports = router;
-const pool = require('../api/databasepuller.js');
+const pool = require('../db.js');
 const {json} = require("express");
 const selfService = require('../api/services/guest.js')
 

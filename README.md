@@ -7,15 +7,8 @@ Todo list API project in Node.js with Express.js
 - MariaDB
 
 ## Project setup
-1. `npm install`
-2. Create table using `create_table.sql`
-
-### Compiles and hot-reloads for development
-```
-npm run dev
-```
-
-### Compiles for production
-```
-npm run start
-```
+1. Run `npm install`
+2. Copy `.env.example` to `.env` and set the environment variables
+3. Run `npm run migrate` to create the database and tables
+4. Run `npm run start` to start the API server (production)
+   - Run `npm run dev` to start the API server (development)

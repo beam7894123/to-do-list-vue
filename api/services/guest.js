@@ -2,7 +2,7 @@ const {empty} = require("../../global-util");
 const SqlString = require('sqlstring');
 const crypto = require('crypto');
 const {json} = require("express");
-const pool = require("../databasepuller");
+const pool = require("../../db.js");
 
 
 async function isUUIDUnique(uuid) {
