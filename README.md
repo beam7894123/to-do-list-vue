@@ -2,7 +2,8 @@
 A small To-do list project in Vue.js(+vite)
 ![guestPage](/readmeImage/guestmode.png)
 ![guestPage](/readmeImage/oldv1.png)
-- ### [Play here! (v1.0.0)](https://beam7894123.github.io/to-do-list-vue/)
+- ### [Play here! (v2.0.0)](https://beam7894123.github.io/to-do-list-vue/)
+- [(v1.0.0)](https://beam7894123.github.io/to-do-list-vue/#/old)
 
 ## Features
 - Modern UI with Ant Design Vue
@@ -21,16 +22,6 @@ A small To-do list project in Vue.js(+vite)
 #### For v1.0.0
 1. `npm install`
 2. `npm run dev`
-
-### Compiles and hot-reloads for development
-```
-npm run dev
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
 
 [//]: # (### Customize configuration)
 
