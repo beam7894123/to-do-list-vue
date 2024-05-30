@@ -10,44 +10,85 @@
       </a-space>
     </div>
 
-    <!-- Input Passcode ===================================================================== -->
-    <div class="flex-item">
-      <a-space align="center">
-        <a-input
-            class = "inputPasscode"
-            id="passcodeInput"
-            v-model:value="passcodeText.passcode"
-            placeholder="Passcode..."
-            @pressEnter="loadTodoList"
-        />
-        <a-button @click="copyPasscode">
-          <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 16.5L19.5 4.5L18.75 3.75H9L8.25 4.5L8.25 7.5L5.25 7.5L4.5 8.25V20.25L5.25 21H15L15.75 20.25V17.25H18.75L19.5 16.5ZM15.75 15.75L15.75 8.25L15 7.5L9.75 7.5V5.25L18 5.25V15.75H15.75ZM6 9L14.25 9L14.25 19.5L6 19.5L6 9Z" fill="#080341"/>
-          </svg>
-        </a-button>
-        <a-button
-            type="primary"
-            :loading="LoadingPasscode"
-            @click="loadTodoList"
-        >
-          Load Passcode
-        </a-button>
-        <a-popconfirm
-            placement="rightTop"
-            ok-text="Yes"
-            cancel-text="No"
-            @confirm="createPasscode">
-          <template v-slot:title>
-            <p> This will overwrite current passcode!</p>
-            <p> Are you sure? </p>
-          </template>
-          <a-button>Create new Passcode</a-button>
-        </a-popconfirm>
-        <a-button @click="$router.push(`/old`)">
-          Local Mode >
-        </a-button>
-      </a-space>
+    <div>
+      <!-- Input Passcode ===================================================================== -->
+      <div class="flex-item-small">
+        <a-space align="center">
+          <a-input
+              class = "inputPasscode"
+              id="passcodeInput"
+              v-model:value="passcodeText.passcode"
+              placeholder="Passcode..."
+              @pressEnter="loadTodoList"
+          />
+          <a-button @click="copyPasscode">
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M19.5 16.5L19.5 4.5L18.75 3.75H9L8.25 4.5L8.25 7.5L5.25 7.5L4.5 8.25V20.25L5.25 21H15L15.75 20.25V17.25H18.75L19.5 16.5ZM15.75 15.75L15.75 8.25L15 7.5L9.75 7.5V5.25L18 5.25V15.75H15.75ZM6 9L14.25 9L14.25 19.5L6 19.5L6 9Z" fill="#080341"/>
+            </svg>
+          </a-button>
+          <a-button
+              type="primary"
+              :loading="LoadingPasscode"
+              @click="loadTodoList"
+          >
+            Load Passcode
+          </a-button>
+          <a-popconfirm
+              placement="rightTop"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="createPasscode">
+            <template v-slot:title>
+              <p> This will overwrite current passcode!</p>
+              <p> Are you sure? </p>
+            </template>
+            <a-button>Create new Passcode</a-button>
+          </a-popconfirm>
+          <a-button @click="$router.push(`/old`)">
+            Local Mode >
+          </a-button>
+        </a-space>
+      </div>
+
+      <!-- Advance option ===================================================================== -->
+      <div class="flex-item-small">
+        <a-collapse class="custom-collapse">
+          <a-collapse-panel key="1" :show-arrow="false">
+            <template #header>
+              <span class="custom-header-text">Advance option</span>
+            </template>
+            <!-- Input API URL ===================================================================== -->
+            <a-space align="baseline">
+              <p class="inputApiUrlLabel" >Api url</p>
+<!--              <label class="inputApiUrl" for="apiUrlInput">Api url: </label>-->
+              <a-input
+                  class="inputApiUrl"
+                  id="apiUrlInput"
+                  v-model:value="apiUrl"
+                  placeholder="Enter your api url..."
+                  @pressEnter="changeApiUrl"
+              />
+              <a-button @click="changeApiUrl" type="primary">
+                Load
+              </a-button>
+              <a-popconfirm
+                  placement="rightTop"
+                  ok-text="Yes"
+                  cancel-text="No"
+                  @confirm="resetApiUrl">
+                <template v-slot:title>
+                  <p> This will overwrite current api url!</p>
+                  <p> Are you sure? </p>
+                </template>
+                <a-button>Reset</a-button>
+              </a-popconfirm>
+            </a-space>
+          </a-collapse-panel>
+        </a-collapse>
+      </div>
     </div>
+
+    <a-divider />
 
     <!-- Create Todo form ===================================================================== -->
     <div class="flex-item">
@@ -109,12 +150,15 @@
         </a-table>
       </a-space>
     </div>
+    <a-divider />
   </div>
 </template>
 
 <script>
-import apiClient from "@/axios.js";
+import apiClient, {setBaseURL} from "@/axios.js";
 import {message} from "ant-design-vue";
+import {onMounted, ref} from "vue";
+import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -147,8 +191,70 @@ export default {
           sorter: (a, b) => a.status - b.status,
         },
       ],
+    }
+  },
+
+  setup() {
+    const apiUrl = ref('');
+
+    onMounted(() => {
+      // Retrieve the apiUrl from cookies when the component is mounted
+      const savedApiUrl = Cookies.get('apiUrl');
+      if (savedApiUrl) {
+        apiUrl.value = savedApiUrl;
+        setBaseURL(savedApiUrl);
       }
-    },
+      else {
+        apiUrl.value = import.meta.env.VITE_API_BASE_URL; // Default API URL
+      }
+    });
+
+    const changeApiUrl = () => {
+      if (apiUrl.value) {
+        try {
+          setBaseURL(apiUrl.value);
+          Cookies.set('apiUrl', apiUrl.value); // Save the apiUrl in a cookie
+          // console.log('New API baseURL:', apiUrl.value);  // Debug: Check the updated URL
+          message.success('API URL changed successfully!');
+          message.info('Your new API URL is: ' + apiUrl.value);
+        } catch (error) {
+          let errorMessage;
+          if (error.response) {
+            errorMessage = error.response.data.message
+          } else {
+            errorMessage = 'API URL change failed!';
+          }
+          message.error(errorMessage);
+        }
+
+      }
+    };
+
+    const resetApiUrl= () => {
+      try {
+        apiUrl.value = import.meta.env.VITE_API_BASE_URL; // Default API URL
+        setBaseURL(apiUrl.value);
+        // console.log('New API baseURL:', import.meta.env.VITE_API_BASE_URL);  // Debug: Check the updated URL
+        message.success('API URL changed successfully!');
+        message.info('Your new API URL is: ' + apiUrl.value);
+      } catch (error) {
+        let errorMessage;
+        if (error.response) {
+          errorMessage = error.response.data.message
+        } else {
+          errorMessage = 'API URL change failed!';
+        }
+        message.error(errorMessage);
+      }
+    };
+
+    return {
+      apiUrl,
+      changeApiUrl,
+      resetApiUrl
+    };
+  },
+
   methods: {
 
 
@@ -319,6 +425,10 @@ export default {
   flex: 1; /* Equal width for all items */
   padding: 1rem;
 }
+.flex-item-small{
+  flex: 1; /* Equal width for all items */
+  padding: 0rem 1rem;
+}
 
 .taskTable {
   width: 100%;
@@ -341,5 +451,35 @@ export default {
 
 .taskTable p {
   text-align: left;
+}
+
+.custom-collapse {
+  border: none;
+  background: none;
+  width: 10rem;
+  padding: 0;
+  font-size: 0.8rem; /* Smaller font size for the header */
+}
+
+.custom-header-text {
+  color: #009847;
+  text-decoration: underline;
+}
+
+.custom-collapse .ant-collapse-item {
+  border: none;
+}
+
+.custom-collapse .ant-collapse-content {
+  border: none;
+  padding: 0;
+}
+
+.inputApiUrl {
+  width: 20rem;
+}
+
+.inputApiUrlLabel {
+  width: 3rem;
 }
 </style>

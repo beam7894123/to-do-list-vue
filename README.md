@@ -10,6 +10,7 @@ A small To-do list project in Vue.js(+vite)
 - Add, remove tasks
 - Save all change and tasks in cookies or on Database!
 - Sort you list by finished or not
+- Edit api url and save it in cookies
 - uhhhhhhhh
 
 ## Project setup and run
