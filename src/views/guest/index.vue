@@ -52,10 +52,10 @@
 
       <!-- Advance option ===================================================================== -->
       <div class="flex-item-small">
-        <a-collapse class="custom-collapse">
+        <a-collapse class="drop-more-collapse">
           <a-collapse-panel key="1" :show-arrow="false">
             <template #header>
-              <span class="custom-header-text">Advance option</span>
+              <span class="drop-more-header-text">Advance option</span>
             </template>
             <!-- Input API URL ===================================================================== -->
             <a-space align="baseline">
@@ -451,28 +451,6 @@ export default {
 
 .taskTable p {
   text-align: left;
-}
-
-.custom-collapse {
-  border: none;
-  background: none;
-  width: 10rem;
-  padding: 0;
-  font-size: 0.8rem; /* Smaller font size for the header */
-}
-
-.custom-header-text {
-  color: #009847;
-  text-decoration: underline;
-}
-
-.custom-collapse .ant-collapse-item {
-  border: none;
-}
-
-.custom-collapse .ant-collapse-content {
-  border: none;
-  padding: 0;
 }
 
 .inputApiUrl {
